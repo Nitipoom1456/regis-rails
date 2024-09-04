@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
   root "user#index"
+  resources :user
   get "/register", to: "user#new"
   post "/register", to: "user#create"
-  # post "users" => "users#create"
-  # get "users/:id" => "users#show", as: :user
-  # get "users/:id/edit" => "users#edit", as: :edit_user
-  # patch "users/:id" => "users#update"
-  # delete "users/:id" => "users#destroy"
+  # get "/user/:id", to: "user#show",
+  # get "/user/:id/edit", to: "user#edit",
+  # patch "/user/:id", to: "user#update"
+  delete "/user/:id", to: "user#destroy"
 end
