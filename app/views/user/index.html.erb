@@ -1,11 +1,3 @@
-<%# <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users</title>
-    <%= stylesheet_link_tag 'style', media: 'all', 'data-turbolinks-track': 'reload' %>
-<%# </head> %>
 <body>
     <div class="list-container">
         <header class="header">
@@ -18,8 +10,8 @@
                     <h2><%= user.first_name %> <%= user.last_name %></h2>
                     <p><%= user.email %></p>
                     <div class="actions">
-                        <span class="action">Detail</span>
-                        <span class="action">Edit</span>
+                        <%= link_to "Detail", user_path(user), class: "action" %>
+                        <%= link_to "Edit", edit_user_path(user), class: "action" %>
                         <%= link_to "Delete", user_path(user), class: "action", data: {
                             turbo_method: :delete,
                             turbo_confirm: "Are you sure?"
@@ -30,4 +22,3 @@
         </main>
     </div>
 </body>
-<%# </html> %>

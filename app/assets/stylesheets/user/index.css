@@ -99,6 +99,8 @@ h1 {
     margin: 1px;
     font-size: 12px;
     cursor: pointer;
+    text-decoration: none;
+    color: black;
 }
 
 .action:last-child {
