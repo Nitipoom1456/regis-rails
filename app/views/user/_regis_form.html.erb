@@ -1,0 +1,47 @@
+<%= form_with model: @user, url: register_path, class: "register-form" do |f| %>
+  <h1>Register Form</h1>
+  <div class="form-row">
+    <div class="form-group">
+      <%= f.label :firstname, "First Name" %>
+      <%= f.text_field :firstname, id: "firstname" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :lastname, "Last Name" %>
+      <%= f.text_field :lastname, id: "lastname" %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <%= f.label :birthday, "Birthday" %>
+      <%= f.date_field :birthday, id: "birthday" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :gender, "Gender" %>
+      <div class="gender-group">
+        <%= f.radio_button :gender, "male", id: "male" %>
+        <%= f.label :male, "Male" %>
+        <%= f.radio_button :gender, "female", id: "female" %>
+        <%= f.label :female, "Female" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <%= f.label :email, "Email" %>
+      <%= f.email_field :email, id: "email" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :phone, "Phone Number" %>
+      <%= f.telephone_field :phone, id: "phone" %>
+    </div>
+  </div>
+
+  <div class="select-group">
+    <%= f.label :subject, "Subject" %>
+    <%= f.select :subject, options_for_select([['Option 1', 'option1'], ['Option 2', 'option2'], ['Option 3', 'option3']], @user.subject), include_blank: "Choose option", id: "subject" %>
+  </div>
+
+  <%= f.submit "Submit", class: "submit-btn" %>
+<% end %>
