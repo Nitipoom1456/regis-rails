@@ -1,5 +1,9 @@
 <div class="container">
     <%= link_to "< Back", :back %>
     <h1>Register Form</h1>
-    <%= render "regis_form", user: @user %>
+    <%= render partial: "regis_form", locals: { 
+        form_url: register_path, 
+        form_method: :post, 
+        submit_text: "Register" 
+    } %>
 </div>
