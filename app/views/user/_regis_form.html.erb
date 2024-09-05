@@ -1,5 +1,5 @@
 <%# <%= form_with model: @user, url: register_path, class: "register-form" do |f| %> 
-<%= form_with model: @user, url: form_url, method: form_method, class: "register-form" do |f| %>%>
+<%= form_with model: @user, url: form_url, method: form_method, class: "register-form" do |f| %>
   <div class="form-row">
     <div class="form-group">
       <%= f.label :first_name, "First Name" %>
@@ -43,5 +43,5 @@
     <%= f.select :subject, options_for_select([['Ruby on Rails', 'Ruby on Rails'], ['Java', 'Java'], ['Python', 'Python']], @user.subject), include_blank: "Choose option", id: "subject" %>
   </div>
 
-  <%= f.submit "Submit", class: "submit-btn" %>
+  <%= f.submit submit_text , class: "submit-btn" %>
 <% end %>
