@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  web:
+    build: .
+    container_name: regis-rails
+    restart: always
+    environment:
+      - SECRET_KEY_BASE=0029378edefd255dee75c08a24a9cd15c3b4fa6f46d1fc20b890dbb349bc9093e94148ef43cdb15a7735f4a9e60885123c8835d48fa1d950068cf889bf7695c4
+      - RAILS_ENV=production
+    ports:
+      - 80:3000
+    volumes:
+      - ../storage:/usr/src/app/storage
