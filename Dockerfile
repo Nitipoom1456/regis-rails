@@ -1,59 +1,62 @@
-# Stage 1: Build environment
-FROM ruby:3.3.1-alpine AS builder
+# syntax = docker/dockerfile:1
 
-# Install build dependencies and other necessary packages
-RUN apk update && apk add --no-cache \
-    build-base \
-    sqlite-dev \
-    git \
-    tzdata \
-    libxml2-dev \
-    libxslt-dev \
-    gcompat
+# Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
+ARG RUBY_VERSION=3.3.1
+FROM registry.docker.com/library/ruby:$RUBY_VERSION-slim as base
 
-# Set up the working directory
-WORKDIR /usr/src/app
+# Rails app lives here
+WORKDIR /rails
 
-# Copy the Gemfile and Gemfile.lock
+# Set production environment
+ENV RAILS_ENV="production" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    BUNDLE_WITHOUT="development"
+
+
+# Throw-away build stage to reduce size of final image
+FROM base as build
+
+# Install packages needed to build gems
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential git libvips pkg-config
+
+# Install application gems
 COPY Gemfile Gemfile.lock ./
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    bundle exec bootsnap precompile --gemfile
 
-# Install the gems
-RUN gem install bundler && \
-    bundle config set --local build.nokogiri --use-system-libraries && \
-    bundle install
-
-# Copy the rest of the application code
+# Copy application code
 COPY . .
 
-# Stage 2: Runtime environment
-FROM ruby:3.3.1-alpine
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile app/ lib/
 
-# Install runtime dependencies
-RUN apk update && apk add --no-cache \
-    sqlite-libs \
-    tzdata \
-    libxml2 \
-    libxslt \
-    gcompat
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-# Set up the working directory
-WORKDIR /usr/src/app
 
-# Copy the gems and application from the build stage
-COPY --from=builder /usr/local/bundle /usr/local/bundle
-COPY --from=builder /usr/src/app /usr/src/app
+# Final stage for app image
+FROM base
 
-# Ensure that the `bundler` and `rails` binaries are available in PATH
-ENV PATH /usr/local/bundle/bin:$PATH
+# Install packages needed for deployment
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl libsqlite3-0 libvips && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Set the timezone (optional)
-ENV TZ=UTC
+# Copy built artifacts: gems, application
+COPY --from=build /usr/local/bundle /usr/local/bundle
+COPY --from=build /rails /rails
+
+# Run and own only the runtime files as a non-root user for security
+RUN useradd rails --create-home --shell /bin/bash && \
+    chown -R rails:rails db log storage tmp
+USER rails:rails
 
 # Entrypoint prepares the database.
-ENTRYPOINT ["/usr/src/app/bin/docker-entrypoint"]
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Expose the port the app runs on
+# Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-
-# Command to run the application
 CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
