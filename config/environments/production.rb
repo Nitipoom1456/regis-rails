@@ -88,12 +88,6 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Enable DNS rebinding protection and other `Host` header attacks.
-  config.hosts = [
-    IPAddr.new("0.0.0.0/0"),        # All IPv4 addresses.
-    IPAddr.new("::/0"),             # All IPv6 addresses.
-    "localhost",                    # The localhost reserved domain.
-    "http://ec2-52-221-179-161.ap-southeast-1.compute.amazonaws.com/"  # Additional comma-separated hosts for development.
-  ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
