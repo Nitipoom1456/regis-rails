@@ -18,3 +18,9 @@ body {
     background: linear-gradient(90deg, rgba(152,67,118,1) 0%, rgba(198,69,119,1) 100%);
     font-family: sans-serif;
 }
+
+.error-message {
+    margin-top: 0;
+    margin-bottom: 0;
+    color: red;
+}

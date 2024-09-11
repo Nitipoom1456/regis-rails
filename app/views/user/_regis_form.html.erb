@@ -4,17 +4,26 @@
     <div class="form-group">
       <%= f.label :first_name, "First Name" %>
       <%= f.text_field :first_name, id: "firstname" %>
+      <% @user.errors[:first_name].each do |message| %>
+        <div class="error-message" ><%= message %></div>
+      <% end %>
     </div>
     <div class="form-group">
       <%= f.label :last_name, "Last Name" %>
       <%= f.text_field :last_name, id: "lastname" %>
+      <% @user.errors[:last_name].each do |message| %>
+        <div class="error-message" ><%= message %></div>
+      <% end %>
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-group">
       <%= f.label :birthday, "Birthday" %>
-      <%= f.date_field :birthday, id: "birthday" %>
+      <%= f.date_field :birthday, max: Date.today.strftime("%Y-%m-%d") , id: "birthday" %>
+      <% @user.errors[:birthday].each do |message| %>
+        <div class="error-message" ><%= message %></div>
+      <% end %>
     </div>
     <div class="form-group">
       <%= f.label :gender, "Gender" %>
@@ -24,6 +33,9 @@
         <%= f.radio_button :gender, "female", id: "female" %>
         <%= f.label :female, "Female" %>
       </div>
+      <% @user.errors[:gender].each do |message| %>
+        <div class="error-message" ><%= message %></div>
+      <% end %>
     </div>
   </div>
 
@@ -31,16 +43,25 @@
     <div class="form-group">
       <%= f.label :email, "Email" %>
       <%= f.email_field :email, id: "email" %>
+      <% @user.errors[:email].each do |message| %>
+        <div class="error-message" ><%= message %></div>
+      <% end %>
     </div>
     <div class="form-group">
       <%= f.label :phone, "Phone Number" %>
       <%= f.telephone_field :phone, id: "phone" %>
+      <% @user.errors[:phone].each do |message| %>
+        <div class="error-message" ><%= message %></div>
+      <% end %>
     </div>
   </div>
 
   <div class="select-group">
     <%= f.label :subject, "Subject" %>
     <%= f.select :subject, options_for_select([['Ruby on Rails', 'Ruby on Rails'], ['Java', 'Java'], ['Python', 'Python']], @user.subject), include_blank: "Choose option", id: "subject" %>
+    <% @user.errors[:subject].each do |message| %>
+        <div class="error-message" ><%= message %></div>
+    <% end %>
   </div>
 
   <%= f.submit submit_text , class: "submit-btn" %>
